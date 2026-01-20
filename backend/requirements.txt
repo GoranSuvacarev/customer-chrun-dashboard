@@ -1,0 +1,39 @@
+# Web Framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# CORS Support
+fastapi-cors==0.0.6
+
+# MongoDB Driver (Async)
+motor==3.6.0
+pymongo==4.9.1
+
+# Data Processing - Python 3.13 compatible
+pandas==2.2.3
+numpy==2.2.1
+
+# Machine Learning
+scikit-learn==1.6.0
+imbalanced-learn==0.12.4
+joblib==1.4.2
+
+# Environment Variables
+python-dotenv==1.0.1
+
+# Data Validation
+pydantic==2.10.6
+pydantic-settings==2.7.1
+
+# Utilities
+python-dateutil==2.9.0
+
+# Visualization Support
+matplotlib==3.10.0
+seaborn==0.13.2
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.2
+httpx==0.28.1
