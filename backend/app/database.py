@@ -101,6 +101,7 @@ def get_collection(collection_name: str):
 class Collections:
     """Collection names used in the application"""
     CUSTOMERS = "customers"
+    MODEL_METADATA = "model_metadata"
     PREDICTIONS = "predictions"
     MODELS = "models"
     ANALYTICS = "analytics"

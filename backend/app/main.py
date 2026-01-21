@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from app.database import connect_to_mongo, close_mongo_connection
 from app.routes.upload import router as upload_router
 from app.routes.customers import router as customers_router
+from app.routes.ml import router as ml_router
 
 # Load environment variables
 load_dotenv()
@@ -73,7 +74,8 @@ app.add_middleware(
 
 # Include routers
 app.include_router(upload_router, prefix="/api/upload", tags=["Upload"])
-app.include_router(customers_router, prefix="/api/customers", tags=["Customers"])  # Add this line
+app.include_router(customers_router, prefix="/api/customers", tags=["Customers"])
+app.include_router(ml_router, prefix="/api/ml", tags=["Machine Learning"])
 
 # Root endpoint
 @app.get("/", tags=["Root"])
@@ -131,7 +133,9 @@ async def api_info():
             "redoc": "/redoc",
             "api_info": "/api/info",
             "upload_csv": "/api/upload/csv",
-            "upload_status": "/api/upload/status"
+            "upload_status": "/api/upload/status",
+            "train_model": "/api/ml/train",
+            "model_info": "/api/ml/model-info"
         },
         "features": [
             "Customer data management",
