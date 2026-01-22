@@ -89,12 +89,8 @@ const CustomerList = () => {
         params.risk_level = riskFilter;
       }
 
-      console.log('Loading customers with params:', params);
-
       // Call API
       const response = await customerAPI.getCustomers(params);
-
-      console.log('API Response:', response);
 
       // Extract data from response
       const customersData = response.data || [];

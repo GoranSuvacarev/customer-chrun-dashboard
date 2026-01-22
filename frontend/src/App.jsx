@@ -8,7 +8,7 @@ import Analytics from './pages/Analytics';
 import CustomerDetail from './pages/CustomerDetail';
 
 // ============================================================================
-// PLACEHOLDER PAGE COMPONENTS (we'll build these properly later)
+// PLACEHOLDER PAGE COMPONENTS
 // ============================================================================
 
 const NotFound = () => (

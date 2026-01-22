@@ -131,7 +131,6 @@ const CustomerDetail = () => {
 
     try {
       const data = await customerAPI.getCustomer(id);
-      console.log('Customer data:', data);
       setCustomer(data);
     } catch (err) {
       console.error('Error loading customer:', err);

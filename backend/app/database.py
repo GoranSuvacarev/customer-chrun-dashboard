@@ -1,6 +1,11 @@
 """
 MongoDB Database Connection Module
-Handles async connection to MongoDB using Motor
+
+This module handles:
+- Async MongoDB connection using Motor
+- Database initialization and shutdown
+- Collection access helpers
+- Connection health monitoring
 """
 
 import os

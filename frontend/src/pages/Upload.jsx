@@ -77,7 +77,6 @@ const Upload = () => {
 
     try {
       const response = await uploadAPI.uploadCSV(selectedFile);
-      console.log('Upload response:', response);
 
       setUploadSuccess({
         message: response.message || 'Upload successful!',
@@ -106,7 +105,6 @@ const Upload = () => {
 
     try {
       const response = await mlAPI.trainModel();
-      console.log('Training response:', response);
 
       // Extract metrics from response
       const accuracy = response.metrics?.accuracy || response.test_accuracy || 0;

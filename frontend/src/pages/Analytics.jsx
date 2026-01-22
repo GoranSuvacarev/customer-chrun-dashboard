@@ -144,10 +144,6 @@ const Analytics = () => {
         analyticsAPI.getChurnByContract(),
       ]);
 
-      console.log('Risk Distribution Response:', riskResponse);
-      console.log('Feature Importance Response:', featureResponse);
-      console.log('Contract Response:', contractResponse);
-
       // Transform Risk Distribution data for Pie Chart
       const transformedRiskData = riskResponse.data.map(item => ({
         name: item.risk_level,
