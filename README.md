@@ -6,14 +6,14 @@ A full-stack machine learning application for predicting customer churn in the t
 
 ## 📋 Table of Contents
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage Guide](#usage-guide)
-- [API Documentation](#api-documentation)
-- [Project Structure](#project-structure)
-- [Future Improvements](#future-improvements)
+- Features
+- Tech Stack
+- Prerequisites
+- Installation
+- Usage Guide
+- API Documentation
+- Project Structure
+- Future Improvements
 
 ---
 
