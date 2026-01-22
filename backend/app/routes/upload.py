@@ -191,21 +191,42 @@ async def upload_csv(
             })
 
     # ========================================
-    # STEP 7: Insert into MongoDB
+    # STEP 7: Insert/Update into MongoDB (Upsert)
     # ========================================
 
     inserted_count = 0
+    updated_count = 0
 
     if valid_documents:
         try:
-            # Bulk insert all valid documents
-            insert_result = await customers_collection.insert_many(valid_documents)
-            inserted_count = len(insert_result.inserted_ids)
+            # Use upsert to update existing or insert new customers
+            for document in valid_documents:
+                document.pop("created_at", None)
+                document.pop("updated_at", None)
+
+                result = await customers_collection.update_one(
+                    {"customerID": document["customerID"]},
+                    {
+                        "$set": document,  # Update all fields (no timestamps)
+                        "$setOnInsert": {
+                            "created_at": datetime.now(timezone.utc)  # Only on insert
+                        },
+                        "$currentDate": {
+                            "updated_at": True  # Always update to current time
+                        }
+                    },
+                    upsert=True
+                )
+
+                if result.upserted_id:
+                    inserted_count += 1
+                elif result.modified_count > 0:
+                    updated_count += 1
 
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error inserting data into database: {str(e)}"
+                detail=f"Error inserting/updating data in database: {str(e)}"
             )
 
     # ========================================
@@ -235,7 +256,8 @@ async def upload_csv(
         "message": f"Successfully processed CSV upload",
         "file_name": file.filename,
         "total_rows_in_csv": len(customers_data),
-        "successful_inserts": inserted_count,
+        "customers_created": inserted_count,
+        "customers_updated": updated_count,
         "failed_validations": len(errors),
         "deleted_existing": deleted_count if clear_existing else 0,
         "database_statistics": {

@@ -13,6 +13,7 @@ from app.database import connect_to_mongo, close_mongo_connection
 from app.routes.upload import router as upload_router
 from app.routes.customers import router as customers_router
 from app.routes.ml import router as ml_router
+from app.routes.analytics import router as analytics_router
 
 # Load environment variables
 load_dotenv()
@@ -76,6 +77,7 @@ app.add_middleware(
 app.include_router(upload_router, prefix="/api/upload", tags=["Upload"])
 app.include_router(customers_router, prefix="/api/customers", tags=["Customers"])
 app.include_router(ml_router, prefix="/api/ml", tags=["Machine Learning"])
+app.include_router(analytics_router, prefix="/api/analytics", tags=["Analytics"])
 
 # Root endpoint
 @app.get("/", tags=["Root"])

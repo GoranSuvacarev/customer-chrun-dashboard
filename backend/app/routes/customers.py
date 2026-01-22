@@ -36,7 +36,8 @@ async def get_customers(
         search: Optional[str] = Query(None, description="Search by customer ID (case insensitive)"),
         churn: Optional[str] = Query(None, description="Filter by churn status (Yes/No)"),
         contract: Optional[str] = Query(None, description="Filter by contract type"),
-        internet_service: Optional[str] = Query(None, description="Filter by internet service type")
+        internet_service: Optional[str] = Query(None, description="Filter by internet service type"),
+        risk_level: Optional[str] = Query(None, description="Filter by risk level (High/Medium/Low)")
 ):
     """
     Get paginated list of customers with optional filtering
@@ -96,6 +97,16 @@ async def get_customers(
                 )
             query_filter["InternetService"] = internet_service
 
+        # Filter by risk level
+        if risk_level:
+            valid_risk_levels = ["High", "Medium", "Low"]
+            if risk_level not in valid_risk_levels:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Risk level must be one of: {', '.join(valid_risk_levels)}"
+                )
+            query_filter["prediction.risk_level"] = risk_level
+
         # ========================================
         # Calculate Pagination
         # ========================================
@@ -150,7 +161,8 @@ async def get_customers(
                 "search": search,
                 "churn": churn,
                 "contract": contract,
-                "internet_service": internet_service
+                "internet_service": internet_service,
+                "risk_level": risk_level
             }
         }
 
@@ -168,10 +180,10 @@ async def get_customers(
 @router.get("/{customer_id}")
 async def get_customer_by_id(customer_id: str):
     """
-    Get a single customer by their customer ID
+    Get a single customer by their MongoDB _id
 
     Args:
-        customer_id: Customer ID (e.g., '7590-VHVEG')
+        customer_id: MongoDB ObjectId as string (e.g., '6971458a42ad1badffce6f17')
 
     Returns:
         Customer details
@@ -181,8 +193,18 @@ async def get_customer_by_id(customer_id: str):
         # Get customers collection
         customers_collection = get_collection(Collections.CUSTOMERS)
 
-        # Find customer by customerID field
-        customer = await customers_collection.find_one({"customerID": customer_id})
+        # Convert string to ObjectId for MongoDB query
+        try:
+            from bson import ObjectId
+            object_id = ObjectId(customer_id)
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid customer ID format: '{customer_id}'"
+            )
+
+        # Find customer by MongoDB _id
+        customer = await customers_collection.find_one({"_id": object_id})
 
         # Check if customer exists
         if not customer:
@@ -191,14 +213,10 @@ async def get_customer_by_id(customer_id: str):
                 detail=f"Customer with ID '{customer_id}' not found"
             )
 
-        # Convert ObjectId to string
+        # Convert ObjectId to string for JSON serialization
         customer = convert_object_id(customer)
 
-        return {
-            "success": True,
-            "message": f"Customer {customer_id} retrieved successfully",
-            "data": customer
-        }
+        return customer
 
     except HTTPException:
         raise
